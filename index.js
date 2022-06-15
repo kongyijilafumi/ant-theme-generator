@@ -340,7 +340,7 @@ async function compileAllLessFilesToCss(
           paths: [antdStylesDir].concat(stylesDir),
           filename: path.resolve(filePath),
           javascriptEnabled: true,
-          plugins: [new NpmImportPlugin({ prefix: "~" })],
+          plugins: [new NpmImportPlugin({ prefix: "~" }), new NpmImportPlugin({ prefix: "~/" })],
         })
         .then((res) => {
           return res;
