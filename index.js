@@ -282,7 +282,8 @@ async function compileAllLessFilesToCss(
   stylesDir,
   antdStylesDir,
   varMap = {},
-  varPath
+  varPath,
+  rootEntryName = "default"
 ) {
   /*
     Get all less files path in styles directory
@@ -315,6 +316,9 @@ async function compileAllLessFilesToCss(
         function (match, importPath, index, content) {
           if (!importPath.endsWith(".less")) {
             importPath += ".less";
+          }
+          if (importPath.includes("@{root-entry-name}")) {
+            importPath = importPath.replace("@{root-entry-name}", rootEntryName)
           }
           const newPath = path.join(directory, importPath);
           // If imported path/file already exists in styles paths then replace import statement with empty line
