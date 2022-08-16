@@ -385,6 +385,7 @@ async function generateTheme({
   outputFilePath,
   themeVariables = ["@primary-color"],
   customColorRegexArray = [],
+  rootEntryName = "default"
 }) {
   try {
     const antdPath = antdStylesDir || path.join(antDir, "lib");
@@ -414,6 +415,7 @@ async function generateTheme({
     styles.forEach((filePath) => {
       content += fs.readFileSync(filePath).toString();
     });
+    content = content.replace(/\@\{root-entry-name\}/g, rootEntryName);
 
     const hashCode = hash.sha256().update(content).digest("hex");
 
@@ -444,6 +446,7 @@ async function generateTheme({
     const varFileContent = combineLess(varFile, nodeModulesPath);
     let antdLess = await bundle({
       src: antdStylesFile,
+      rootVars: { "root-entry-name": rootEntryName },
     });
     // console.log(varFileContent);
     customColorRegexArray = [
@@ -513,7 +516,8 @@ async function generateTheme({
       stylesDir,
       antdStylesDir,
       themeCompiledVars,
-      varFile
+      varFile,
+      rootEntryName
     );
     let fadeMap = {};
     const fades = antdLess.match(/fade\(.*\)/g);
